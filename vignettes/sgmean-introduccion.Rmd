@@ -1,0 +1,97 @@
+---
+title: "sgmean: Trimmed Mean Compatible with Statgraphics"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{sgmean: Trimmed Mean Compatible with Statgraphics}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction
+
+The `sgmean` package implements a trimmed mean method that replicates 
+the behavior of 'Statgraphics' software. This method differs 
+fundamentally from R's built-in `mean(..., trim)` in how it handles 
+boundary values.
+
+## The Mathematical Difference
+
+Given a sorted vector of $n$ values and a trim fraction $\alpha$, 
+both methods compute $k = \alpha \times n$. The key difference is:
+
+- **R base**: truncates $k$ to the nearest integer and **completely 
+removes** that many values from each end.
+- **sgmean**: applies a **proportional discount** of $k$ to the 
+boundary values, without removing them entirely.
+
+### Formula
+
+$$\bar{x}_{sg} = \frac{x_1(1-k) + x_2 + \cdots + x_{n-1} + x_n(1-k)}{n - 2k}$$
+
+## Practical Example
+
+```{r example}
+library(sgmean)
+
+x <- c(10, 20, 30, 40, 50, 60, 70, 80, 90, 200)
+
+# R base method
+result_r <- mean(x, trim = 0.05)
+
+# sgmean method (Statgraphics compatible)
+result_sg <- sgmean(x, trim = 0.05)
+
+cat("R base  (trim=0.05):", result_r,  "\n")
+cat("sgmean  (trim=0.05):", result_sg, "\n")
+cat("Difference:         ", abs(result_r - result_sg), "\n")
+```
+
+## Why the Results Differ
+
+With `trim = 0.05` and `n = 10`, we get $k = 0.05 \times 10 = 0.5$.
+
+**R base** rounds $k = 0.5$ down to **0** and removes no values:
+
+$$\bar{x}_R = \frac{10+20+30+40+50+60+70+80+90+200}{10} = 65$$
+
+**sgmean** applies a proportional discount of 50% to the boundary values:
+
+$$x_1^* = 10 \times (1 - 0.5) = 5$$
+$$x_{10}^* = 200 \times (1 - 0.5) = 100$$
+$$\bar{x}_{sg} = \frac{5+20+30+40+50+60+70+80+90+100}{9} = 60.56$$
+
+## When Do Both Methods Agree?
+
+Both methods produce identical results when $k = \alpha \times n$ 
+is an exact integer:
+
+```{r comparison}
+x <- c(10, 20, 30, 40, 50, 60, 70, 80, 90, 200)
+
+# When k is an exact integer (trim=0.1, n=10, k=1)
+cat("trim=0.10 | R base:", mean(x, trim=0.10), 
+    "| sgmean:", sgmean(x, trim=0.10), "\n")
+
+# When k is not an integer (trim=0.05, n=10, k=0.5)
+cat("trim=0.05 | R base:", mean(x, trim=0.05), 
+    "| sgmean:", sgmean(x, trim=0.05), "\n")
+
+# When k is not an integer (trim=0.15, n=10, k=1.5)
+cat("trim=0.15 | R base:", mean(x, trim=0.15), 
+    "| sgmean:", sgmean(x, trim=0.15), "\n")
+```
+
+## Conclusion
+
+The `sgmean` method provides a **continuous and mathematically 
+consistent** trimmed mean for any trim fraction between 0 and 0.99, 
+replicating the behavior of 'Statgraphics' software and avoiding 
+the discontinuities introduced by integer truncation in R's 
+built-in `mean()`.

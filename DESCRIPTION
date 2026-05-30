@@ -15,3 +15,7 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 8.0.0
 URL: https://github.com/jcarlosgaviria/sgmean
 BugReports: https://github.com/jcarlosgaviria/sgmean/issues
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
