@@ -1,0 +1,15 @@
+Package: sgmean
+Title: Trimmed Mean Compatible with Statgraphics Method
+Version: 0.1.0
+Authors@R: 
+    person("Juan Carlos", "Gaviria Chaverra",
+           email= "jcarlos.gaviria@udea.edu.co",
+           role = c("aut", "cre"))
+Description: Computes the trimmed mean using a proportional discount method
+    on the extremes, replicating the behavior of Statgraphics software.
+    Unlike R's built-in mean() with trim, this method applies a weighted
+    reduction to boundary values rather than removing them entirely.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 8.0.0
