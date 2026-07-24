@@ -1,19 +1,27 @@
 Package: sgmean
-Title: Trimmed Mean Compatible with 'Statgraphics' Method
-Version: 0.1.0
-Authors@R: 
-    person("Juan Carlos", "Gaviria Chaverra",
-           email = "jcarlos.gaviria@udea.edu.co",
-           role = c("aut", "cre"))
-Description: Computes the trimmed mean using a proportional discount method
-    on the extremes, replicating the behavior of 'Statgraphics' software.
-    Unlike R's built-in mean() with trim, this method applies a weighted
-    reduction to boundary values rather than removing them entirely.
+Type: Package
+Title: Proportional Trimmed Mean
+Version: 0.1.1
+Date: 2026-06-24
+Authors@R: person("Juan Carlos", "Gaviria Chaverra",
+    email = "jcarlos.gaviria@udea.edu.co",
+    role = c("aut", "cre"),
+    comment = c(ORCID = "0000-0000-0000-0000"))
+Description: Computes a proportional trimmed mean that resolves the
+    integer truncation problem of base R's mean(..., trim). When
+    k = trim * n is non-integer, a fractional discount (1 - delta) is
+    applied to boundary observations, where delta = k - floor(k).
+    The resulting estimator is continuous in alpha for any fixed n,
+    syntactically identical to mean(..., trim), and compatible with
+    the Statgraphics implementation. See Gaviria Chaverra (2026)
+    <doi:10.32614/CRAN.package.sgmean>.
 License: MIT + file LICENSE
 Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 8.0.0
+RoxygenNote: 7.3.2
+Suggests:
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
 URL: https://github.com/jcarlosgaviria/sgmean
 BugReports: https://github.com/jcarlosgaviria/sgmean/issues
-Suggests: knitr, rmarkdown
-VignetteBuilder: knitr
