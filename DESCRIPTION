@@ -13,7 +13,7 @@ Description: Computes a proportional trimmed mean that resolves the
     applied to boundary observations, where delta = k - floor(k).
     The resulting estimator is continuous in alpha for any fixed n,
     syntactically identical to mean(..., trim), and compatible with
-    the Statgraphics implementation. See Gaviria Chaverra (2026)
+    the Statgraphics implementation. See Gaviria-Chaverra (2026)
     <doi:10.32614/CRAN.package.sgmean>.
 License: MIT + file LICENSE
 Encoding: UTF-8
