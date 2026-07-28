@@ -2,8 +2,8 @@ Package: sgmean
 Type: Package
 Title: Proportional Trimmed Mean
 Version: 0.1.1
-Date: 2026-06-24
-Authors@R: person("Juan Carlos", "Gaviria Chaverra",
+Date: 2026-07-27
+Authors@R: person("Juan C.", "Gaviria-Chaverra",
     email = "jcarlos.gaviria@udea.edu.co",
     role = c("aut", "cre"),
     comment = c(ORCID = "0009-0008-9403-416X"))
