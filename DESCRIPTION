@@ -15,7 +15,7 @@ Description: Computes a proportional trimmed mean that resolves the
     syntactically identical to mean(..., trim), and compatible with
     the 'Statgraphics' implementation. See Gaviria-Chaverra (2026)
     <doi:10.32614/CRAN.package.sgmean>.
-License: License: GPL-3
+License: GPL-3
 Encoding: UTF-8
 RoxygenNote: 7.3.2
 Suggests:
