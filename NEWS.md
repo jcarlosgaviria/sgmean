@@ -1,3 +1,27 @@
+# sgmean 0.1.2
+
+## Bug fixes
+
+* **Wrong values when little data remained after trimming.** For some
+  combinations of `n` and `trim` (when `n < 2 * floor(k) + 3`, with
+  `k = trim * n`, and for `n = 2` or `3` with `k < 1`) the sum of the
+  interior observations used a range `a:b` with `a > b`, which counts
+  backwards in R instead of being empty. Examples fixed:
+  `sgmean(1:9, 0.45)` returned 27.22 (now 5), `sgmean(1:10, 0.45)` returned
+  16.5 (now 5.5), `sgmean(1:2, 0.3)` returned 5.25 (now 1.5). Results for
+  usual settings (small `trim`, moderate `n`) are unchanged.
+* The weights are now computed as the overlap of each observation with the
+  interval `[k, n - k]`, which removes the case analysis and the `:` ranges.
+* `na.rm = FALSE` with missing values now returns `NA`, as `mean()` does
+  (before, `sort()` silently dropped them). Invalid `trim` (length other than
+  one, `NA`) now gives a clear error.
+
+## Other changes
+
+* Added a `testthat` suite, including an independent reference
+  implementation and regression tests for the cases above.
+
+
 # sgmean 0.1.1
 
 ## Bug fixes

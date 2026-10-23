@@ -10,7 +10,7 @@
 #' @param trim Fraction of observations to trim symmetrically from
 #'   each end of the sorted data. Must be in \eqn{[0, 0.5)}.
 #' @param na.rm Logical. Should missing values be removed before
-#'   computation? Default is \code{FALSE}.
+#'   computation? Default is \code{FALSE}; if \code{FALSE} and \code{x} contains \code{NA}, the result is \code{NA}, as in \code{mean()}.
 #'
 #' @return A single numeric scalar.
 #'
@@ -55,37 +55,37 @@ sgmean <- function(x, trim = 0.05, na.rm = FALSE) {
 
   if (!is.numeric(x))
     stop("'x' must be a numeric vector.")
-  if (trim < 0 || trim >= 0.5)
-    stop("'trim' must be in [0, 0.5).")
+  if (!is.numeric(trim) || length(trim) != 1L || is.na(trim) ||
+      trim < 0 || trim >= 0.5)
+    stop("'trim' must be a single number in [0, 0.5).")
   if (na.rm)
     x <- x[!is.na(x)]
+  else if (anyNA(x))
+    return(NA_real_)
 
-  x     <- sort(x)
-  n     <- length(x)
-  k     <- trim * n
-  kf    <- floor(k)
-  delta <- k - kf
+  n <- length(x)
+  if (n == 0L)
+    return(NaN)
+  x <- sort(x)
+  k <- trim * n
 
   # No trimming requested
   if (k == 0)
     return(mean(x))
 
-  # Type A: 0 < k < 1 — proportional discount on x[1] and x[n]
-  if (kf == 0) {
-    suma <- (1 - k) * x[1] +
-            sum(x[2:(n - 1)]) +
-            (1 - k) * x[n]
+  # Exact integer k: identical to mean(x, trim = trim)
+  kf <- floor(k)
+  if (k == kf)
+    return(mean(x[(kf + 1):(n - kf)]))
 
-  # Exact integer k — identical to mean(..., trim)
-  } else if (delta == 0) {
-    suma <- sum(x[(kf + 1):(n - kf)])
-
-  # Type B: k > 1, non-integer — fractional discount on boundary obs
-  } else {
-    suma <- (1 - delta) * x[kf + 1] +
-            sum(x[(kf + 2):(n - kf - 1)]) +
-            (1 - delta) * x[n - kf]
-  }
-
-  return(suma / (n - 2 * k))
+  # General case (0 < k < 1, or k > 1 not an integer). The weight of the
+  # i-th order statistic is the length of [i - 1, i] intersected with
+  # [k, n - k]; the weights add up to n - 2k. Computed without ':' ranges,
+  # which run backwards in R when the upper end is smaller than the lower
+  # one (version 0.1.1 returned wrong values when little data remained
+  # after trimming).
+  i <- seq_len(n)
+  w <- pmax(0, pmin(i, n - k) - pmax(i - 1, k))
+  keep <- w > 0
+  sum(w[keep] * x[keep]) / (n - 2 * k)
 }
