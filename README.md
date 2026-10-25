@@ -8,13 +8,22 @@ Unlike R’s built-in `mean(..., trim)`, which removes boundary values
 entirely, `sgmean` applies a weighted reduction — producing results
 consistent with Statgraphics.
 
+`sgmean` is an independent project and is not affiliated with or
+endorsed by Statgraphics.
+
 ## Installation
 
-You can install `sgmean` from GitHub with:
+The version on CRAN is 0.1.2 (the function `sgmean()` only). The
+development version on GitHub is 0.2.0 and adds inference, diagnostics
+and descriptive statistics (see below); it will reach CRAN later.
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("jcarlosgaviria/sgmean")
+# CRAN version (0.1.2)
+install.packages("sgmean")
+
+# Development version (0.2.0)
+# install.packages("remotes")
+remotes::install_github("jcarlosgaviria/sgmean")
 ```
 
 ## Usage
@@ -30,6 +39,55 @@ sgmean(x, trim = 0.05)
 # Base R method (different result)
 mean(x, trim = 0.05)
 ```
+
+## New in 0.2.0 (GitHub version)
+
+``` r
+x <- c(850, 920, 980, 1050, 1120, 1180, 1250, 1320, 1400, 1480, 1550,
+       1700, 1850, 2100, 8500)
+
+# Proportional trimmed mean vs. base R
+sgmean(x, trim = 0.10)          # 1365.833
+mean(x, trim = 0.10)            # 1376.923 (R truncates k = 1.5 to 1)
+diagnose_truncation(x, trim = 0.10)
+plot_trim_profile(x)
+
+# Inference for the trimmed mean (Yuen-type tests return 'htest' objects)
+y <- c(900, 1010, 1100, 1190, 1250, 1330, 1420, 1500, 1610, 1720, 1830,
+       1950, 2100, 2300, 2600)   # a second sample
+ttest_trimmed(x, mu0 = 1300, trim = 0.10)
+ci_trimmed(x, trim = 0.10)
+se_trimmed(x, trim = 0.10)
+ttest_rel_trimmed(x, y, trim = 0.10)     # paired samples
+ttest_ind_trimmed(x, y, trim = 0.10)     # two samples; also gives effect_size
+effect_size_trimmed(x, y, trim = 0.10)   # robust standardized difference
+
+# Statgraphics-style descriptive statistics (29 results; English or Spanish labels)
+sg_summary(x, trim = 0.10)
+print(sg_summary(x, trim = 0.10), lang = "es")
+set_language("es")
+```
+
+Also available: `winsorized_mean()`, `winsorized_sigma()`,
+`sg_quantile()` (Hyndman-Fan types 1-9, default type 2), `quartiles()`,
+`iqr()`, `geometric_mean()`, `dam()`, `sbi()`, `skewness()`,
+`kurtosis()`, `cv()`, `std_error()` and `sg_mode()`. Three functions
+carry the prefix `sg_` (`sg_quantile`, `sg_mode`, `sg_summary`) so that
+they do not mask `stats::quantile`, `base::mode` and `summary`.
+
+The standard error and the test for fractional `k = trim * n`
+interpolate between the classical estimators for `floor(k)` and
+`floor(k) + 1` values per tail. They coincide with the classical
+Tukey-McLaughlin / Yuen results when `k` is an integer; for fractional
+`k` they are a heuristic supported by simulation, not a proven result.
+See `NEWS.md` for details.
+
+## Python
+
+The same methods are available in Python: [sgmean on
+PyPI](https://pypi.org/project/sgmean/) and [sgmean-python on
+GitHub](https://github.com/jcarlosgaviria/sgmean-python). The two
+packages share reference values in their test suites.
 
 ## Author
 
