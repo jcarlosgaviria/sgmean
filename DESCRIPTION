@@ -1,8 +1,8 @@
 Package: sgmean
 Type: Package
 Title: Proportional Trimmed Mean
-Version: 0.1.2
-Date: 2026-10-22
+Version: 0.2.0
+Date: 2026-10-24
 Authors@R: person("Juan C.", "Gaviria-Chaverra",
     email = "jcarlos.gaviria@udea.edu.co",
     role = c("aut", "cre"),
@@ -13,10 +13,18 @@ Description: Computes a proportional trimmed mean that resolves the
     applied to boundary observations, where delta = k - floor(k).
     The resulting estimator is continuous in alpha for any fixed n,
     syntactically identical to mean(..., trim), and compatible with
-    the 'Statgraphics' implementation. See Gaviria Chaverra (2026)
+    the 'Statgraphics' implementation. The package also provides
+    standard errors, confidence intervals and Yuen-type one-sample,
+    paired and two-sample t tests for trimmed means, a robust effect
+    size, a truncation diagnostic, and descriptive statistics
+    (winsorized mean and sigma, Hyndman-Fan quantiles, biweight scale,
+    skewness, kurtosis). See Gaviria Chaverra (2026)
     <doi:10.32614/CRAN.package.sgmean>.
 License: MIT + file LICENSE
 Encoding: UTF-8
+Imports:
+    graphics,
+    stats
 Suggests:
     knitr,
     rmarkdown,

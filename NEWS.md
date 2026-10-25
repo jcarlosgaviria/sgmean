@@ -1,3 +1,51 @@
+# sgmean 0.2.0
+
+## New functions
+* `se_trimmed()`, `ci_trimmed()`, `ttest_trimmed()`: standard error, confidence
+  interval and one-sample t test for the proportional trimmed mean. The standard
+  error interpolates between the winsorized-sample SEs with `floor(k)` and
+  `floor(k) + 1` values per tail (`k = trim * n`); with integer `k` it is the
+  classical Tukey-McLaughlin SE. For fractional `k` this is a heuristic supported
+  by simulation, not a proven result.
+* `ttest_ind_trimmed()`: Yuen-type two-sample test (Welch-Satterthwaite df);
+  its result also carries a robust `effect_size`.
+* `ttest_rel_trimmed()`: paired test (trimmed mean of the differences).
+* `effect_size_trimmed()`: robust standardized difference of trimmed means
+  (Algina, Keselman and Penfield, 2005); equals Cohen's d when `trim = 0`.
+* `diagnose_truncation()`: compares `sgmean()` with `mean(x, trim = )` (integer truncation).
+* `plot_trim_profile()`: step (base R) vs smooth (sgmean) trimmed mean against `trim`.
+
+## Descriptive statistics (parity with the Python package 0.4.0)
+* `sg_summary()`: the 29 "Summary Statistics" results of Statgraphics Centurion for
+  one variable or for several (data frame, list or matrix); prints as an aligned
+  table and converts with `as.data.frame()`.
+* `winsorized_mean()`, `winsorized_sigma()` (integer `floor(trim * n)` per tail, as
+  Statgraphics does).
+* `sg_quantile()`, `quartiles()`, `iqr()`: the nine Hyndman-Fan definitions;
+  default `type = 2`, which reproduces the Statgraphics quartiles and sextiles on
+  the data sets tested (base R uses type 7).
+* `geometric_mean()`, `dam()`, `sbi()`, `skewness()`, `kurtosis()` (adjusted G1 and
+  G2, optionally standardized), `cv()`, `std_error()`, `sg_mode()`.
+* `set_language()` and the `SGMEAN_LANG` environment variable: English or Spanish
+  labels in the printed tables.
+* Three names carry the prefix `sg_` (`sg_quantile`, `sg_mode`, `sg_summary`) so
+  they do not mask `stats::quantile`, `base::mode` and the generic `summary`.
+  In Python they are `quantile`, `mode` and `summary`.
+
+## Options
+* `alternative = c("two.sided", "less", "greater")` in the tests (one-sided
+  tests give one-sided intervals, as `t.test()`).
+* `na.rm` in the new functions (default `FALSE` = error on missing values;
+  `TRUE` drops them, and drops pairs in the paired test). One-column data frames
+  are accepted.
+* A warning is given when the effective sample size `n - 2k` is below 8.
+
+## Dependencies
+* Imports `stats` and `graphics` (base packages).
+* The tests share reference values with the Python package
+  (`tests/testthat/reference_vectors.csv` and `descriptive_vectors.csv`).
+
+
 # sgmean 0.1.2
 
 ## Bug fixes

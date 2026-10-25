@@ -1,16 +1,20 @@
 ## Submission notes
 
-This is an update (0.1.1 -> 0.1.2) that fixes wrong results of `sgmean()` in
-some edge cases, mainly when little data remains after trimming (for example
-`sgmean(1:9, trim = 0.45)` returned 27.22 instead of 5; the cause was a range
-`a:b` with `a > b`, which counts backwards in R). Results for usual settings
-(small `trim`, moderate `n`) are unchanged.
+This is an update (0.1.2 -> 0.2.0). The behaviour of `sgmean()` is unchanged;
+the new version adds functions that build on it:
 
-Other changes:
-
-* `na.rm = FALSE` with missing values now returns `NA`, as `mean()` does.
-* Invalid `trim` values now give a clear error.
-* A testthat suite (including an independent reference implementation) was added.
+* Inference for the proportional trimmed mean: `se_trimmed()`, `ci_trimmed()`,
+  `ttest_trimmed()`, `ttest_rel_trimmed()`, `ttest_ind_trimmed()` (Yuen-type
+  tests returning `htest` objects) and `effect_size_trimmed()`.
+* Diagnostics: `diagnose_truncation()` and `plot_trim_profile()`.
+* Descriptive statistics: `sg_summary()`, `winsorized_mean()`,
+  `winsorized_sigma()`, `sg_quantile()`, `quartiles()`, `iqr()`,
+  `geometric_mean()`, `dam()`, `sbi()`, `skewness()`, `kurtosis()`, `cv()`,
+  `std_error()`, `sg_mode()`, and `set_language()` for English/Spanish labels
+  of the printed tables.
+* The package now imports `stats` and `graphics` (base packages).
+* The tests include reference values shared with a Python implementation of
+  the same methods.
 
 ## Test environments
 
@@ -18,15 +22,8 @@ Other changes:
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
-
-* checking for future file timestamps ... NOTE
-  unable to verify current time
-
-  This note comes from the local machine, which could not reach a time
-  server; it is not related to the package.
+0 errors | 0 warnings | 0 notes
 
 ## Reverse dependencies
 
 There are no reverse dependencies.
-
